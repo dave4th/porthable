@@ -1,3 +1,7 @@
+ATTENZIONE
+==========
+Il progetto e` in corso, le informazioni contenute in questo repository sono inesatte ed incomplete.
+
 # porthable
 Portabile (?) "logger" di temperatura e umidita` con LCD e mdulo ESP8266
 
