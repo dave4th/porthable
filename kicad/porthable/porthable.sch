@@ -1,0 +1,425 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:special
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:arduino
+LIBS:Conn-raspberry
+LIBS:porthable-cache
+EELAYER 27 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "ATmega328 w/ DHT11, TFT LCD, ESP8266"
+Date "8 dec 2015"
+Rev "0.0.1"
+Comp "mail4davide@gmail.com"
+Comment1 "porthable (Temperatura, Umidita`, TFT LCD, ESP8266)"
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L DISPLAY_128X128SPI S1
+U 1 1 565B3034
+P 6700 1700
+F 0 "S1" H 6500 1450 60  0000 C CNN
+F 1 "DISPLAY_128X128SPI" H 7050 750 60  0000 C CNN
+F 2 "~" H 7450 1100 60  0000 C CNN
+F 3 "~" H 7450 1100 60  0000 C CNN
+	1    6700 1700
+	1    0    0    1   
+$EndComp
+$Comp
+L CONN_4X2 U2
+U 1 1 566699E3
+P 8650 1300
+F 0 "U2" H 8650 1550 50  0000 C CNN
+F 1 "ESP8266" V 8650 1300 40  0000 C CNN
+F 2 "" H 8650 1300 60  0000 C CNN
+F 3 "" H 8650 1300 60  0000 C CNN
+	1    8650 1300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L CONN_5 DS1302
+U 1 1 56669A09
+P 10400 1300
+F 0 "DS1302" V 10350 1300 50  0000 C CNN
+F 1 "CONN_5" V 10450 1300 50  0000 C CNN
+F 2 "" H 10400 1300 60  0000 C CNN
+F 3 "" H 10400 1300 60  0000 C CNN
+	1    10400 1300
+	0    -1   -1   0   
+$EndComp
+Text Notes 10200 1850 1    60   ~ 0
+VCC
+Text Notes 10300 1850 1    60   ~ 0
+GND
+Text Notes 10400 1850 1    60   ~ 0
+CLK
+Text Notes 10500 1850 1    60   ~ 0
+DAT
+$Comp
+L CONN_3 DHT11
+U 1 1 5666A2A2
+P 9600 1350
+F 0 "DHT11" V 9550 1350 50  0000 C CNN
+F 1 "CONN_3" V 9650 1350 40  0000 C CNN
+F 2 "" H 9600 1350 60  0000 C CNN
+F 3 "" H 9600 1350 60  0000 C CNN
+	1    9600 1350
+	0    -1   -1   0   
+$EndComp
+Text Notes 9500 1800 1    60   ~ 0
++
+Text Notes 9700 1800 1    60   ~ 0
+-
+Text Notes 9600 1800 1    60   ~ 0
+out
+Text Notes 8500 1800 1    60   ~ 0
+TX0
+Text Notes 8800 950  1    60   ~ 0
+RX0
+Text Notes 8500 950  1    60   ~ 0
+GND
+Text Notes 8600 1800 1    60   ~ 0
+EN
+Text Notes 8800 1800 1    60   ~ 0
+VCC
+$Comp
+L ATMEGA328-P IC1
+U 1 1 5666F771
+P 3800 4100
+F 0 "IC1" H 3050 5350 40  0000 L BNN
+F 1 "ATMEGA328-P" H 4200 2700 40  0000 L BNN
+F 2 "DIL28" H 3800 4100 30  0000 C CIN
+F 3 "" H 3800 4100 60  0000 C CNN
+	1    3800 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1600 2000 1600 3000
+Wire Wire Line
+	1600 3000 1600 3300
+Wire Wire Line
+	1600 3300 1600 5600
+Wire Wire Line
+	1600 5600 1600 6600
+Wire Wire Line
+	1600 3000 2900 3000
+Wire Wire Line
+	1600 3300 2900 3300
+Connection ~ 1600 3000
+Text Notes 10600 1900 1    60   ~ 0
+RESET
+Wire Wire Line
+	1800 2200 1800 3600
+Wire Wire Line
+	1800 3600 1800 5200
+Wire Wire Line
+	1800 5200 1800 5300
+Wire Wire Line
+	1800 5300 1800 6400
+Wire Wire Line
+	1800 6400 1800 6600
+Wire Wire Line
+	1800 5200 2900 5200
+Wire Wire Line
+	1800 5300 2900 5300
+Connection ~ 1800 5200
+Wire Wire Line
+	8800 900  8800 700 
+Wire Wire Line
+	8800 700  9100 700 
+Wire Wire Line
+	9100 700  9100 4900
+Wire Wire Line
+	9100 4900 4800 4900
+Wire Wire Line
+	8500 1700 8500 4800
+Wire Wire Line
+	8500 4800 4800 4800
+Wire Wire Line
+	7200 1700 7200 3200
+Wire Wire Line
+	7200 3200 4800 3200
+Wire Wire Line
+	7100 1700 7100 3100
+Wire Wire Line
+	7100 3100 4800 3100
+Wire Wire Line
+	7000 1700 7000 3000
+Wire Wire Line
+	7000 3000 4800 3000
+Wire Wire Line
+	6900 1700 6900 3300
+Wire Wire Line
+	6900 3300 4800 3300
+Wire Wire Line
+	6800 1700 6800 3500
+Wire Wire Line
+	6800 3500 4800 3500
+Wire Wire Line
+	10400 1700 10400 5300
+Wire Wire Line
+	10400 5300 4800 5300
+Wire Wire Line
+	10500 1700 10500 5200
+Wire Wire Line
+	10500 5200 4800 5200
+Wire Wire Line
+	10600 1700 10600 5100
+Wire Wire Line
+	10600 5100 4800 5100
+Wire Wire Line
+	9600 1700 9600 5000
+Wire Wire Line
+	9600 5000 4800 5000
+Wire Wire Line
+	1600 2000 5000 2000
+Wire Wire Line
+	5000 2000 6700 2000
+Wire Wire Line
+	6700 2000 7400 2000
+Wire Wire Line
+	7400 2000 8600 2000
+Wire Wire Line
+	8600 2000 8800 2000
+Wire Wire Line
+	8800 2000 9500 2000
+Wire Wire Line
+	9500 2000 10200 2000
+Wire Wire Line
+	6700 2000 6700 1700
+Wire Wire Line
+	7400 2000 7400 1700
+Connection ~ 6700 2000
+Wire Wire Line
+	8600 2000 8600 1700
+Connection ~ 7400 2000
+Wire Wire Line
+	8800 2000 8800 1700
+Connection ~ 8600 2000
+Wire Wire Line
+	9500 2000 9500 1700
+Connection ~ 8800 2000
+Wire Wire Line
+	10200 2000 10200 1700
+Connection ~ 9500 2000
+Wire Wire Line
+	1800 2200 5400 2200
+Wire Wire Line
+	5400 2200 5800 2200
+Wire Wire Line
+	5800 2200 7300 2200
+Wire Wire Line
+	7300 2200 8200 2200
+Wire Wire Line
+	8200 2200 9700 2200
+Wire Wire Line
+	9700 2200 10300 2200
+Wire Wire Line
+	7300 2200 7300 1700
+Wire Wire Line
+	8200 2200 8200 700 
+Wire Wire Line
+	8200 700  8500 700 
+Wire Wire Line
+	8500 700  8500 900 
+Connection ~ 7300 2200
+Wire Wire Line
+	9700 2200 9700 1700
+Connection ~ 8200 2200
+Wire Wire Line
+	10300 2200 10300 1700
+Connection ~ 9700 2200
+$Comp
+L C C2
+U 1 1 5667021A
+P 2500 3600
+F 0 "C2" H 2500 3700 40  0000 L CNN
+F 1 "0,1uF" H 2506 3515 40  0000 L CNN
+F 2 "~" H 2538 3450 30  0000 C CNN
+F 3 "~" H 2500 3600 60  0000 C CNN
+	1    2500 3600
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2900 3600 2700 3600
+Wire Wire Line
+	2300 3600 1800 3600
+Connection ~ 1800 3600
+$Comp
+L +3,3V #PWR?
+U 1 1 566702A4
+P 1600 6600
+F 0 "#PWR?" H 1600 6560 30  0001 C CNN
+F 1 "+3,3V" H 1600 6710 30  0000 C CNN
+F 2 "" H 1600 6600 60  0000 C CNN
+F 3 "" H 1600 6600 60  0000 C CNN
+	1    1600 6600
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 566702B3
+P 1800 6600
+F 0 "#PWR?" H 1800 6600 30  0001 C CNN
+F 1 "GND" H 1800 6530 30  0001 C CNN
+F 2 "" H 1800 6600 60  0000 C CNN
+F 3 "" H 1800 6600 60  0000 C CNN
+	1    1800 6600
+	1    0    0    -1  
+$EndComp
+Connection ~ 1800 5300
+Connection ~ 1600 3300
+$Comp
+L C C1
+U 1 1 56670337
+P 2000 6000
+F 0 "C1" H 2000 6100 40  0000 L CNN
+F 1 "4,7uF" H 2006 5915 40  0000 L CNN
+F 2 "~" H 2038 5850 30  0000 C CNN
+F 3 "~" H 2000 6000 60  0000 C CNN
+	1    2000 6000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1600 5600 2000 5600
+Wire Wire Line
+	2000 5600 2000 5800
+Connection ~ 1600 5600
+Wire Wire Line
+	2000 6200 2000 6400
+Wire Wire Line
+	2000 6400 1800 6400
+Connection ~ 1800 6400
+$Comp
+L R R1
+U 1 1 56672AC8
+P 5000 2650
+F 0 "R1" V 5080 2650 40  0000 C CNN
+F 1 "10K" V 5007 2651 40  0000 C CNN
+F 2 "~" V 4930 2650 30  0000 C CNN
+F 3 "~" H 5000 2650 30  0000 C CNN
+	1    5000 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5000 2000 5000 2400
+Connection ~ 5000 2000
+Wire Wire Line
+	5000 2900 5000 4450
+Wire Wire Line
+	5000 4450 4800 4450
+$Comp
+L C C3
+U 1 1 56672C56
+P 5400 2600
+F 0 "C3" H 5400 2700 40  0000 L CNN
+F 1 "22pF" H 5406 2515 40  0000 L CNN
+F 2 "~" H 5438 2450 30  0000 C CNN
+F 3 "~" H 5400 2600 60  0000 C CNN
+	1    5400 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C4
+U 1 1 56672C6F
+P 5800 2600
+F 0 "C4" H 5800 2700 40  0000 L CNN
+F 1 "22pF" H 5806 2515 40  0000 L CNN
+F 2 "~" H 5838 2450 30  0000 C CNN
+F 3 "~" H 5800 2600 60  0000 C CNN
+	1    5800 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L CRYSTAL X1
+U 1 1 56672C7C
+P 5400 4200
+F 0 "X1" H 5400 4350 60  0000 C CNN
+F 1 "16000M" H 5400 4050 60  0000 C CNN
+F 2 "~" H 5400 4200 60  0000 C CNN
+F 3 "~" H 5400 4200 60  0000 C CNN
+	1    5400 4200
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4800 3600 5400 3600
+Wire Wire Line
+	5400 2800 5400 3600
+Wire Wire Line
+	5400 3600 5400 3800
+Wire Wire Line
+	5400 3800 5400 3900
+Wire Wire Line
+	5400 4500 5400 4600
+Wire Wire Line
+	5400 4600 5400 4700
+Wire Wire Line
+	5400 4700 5800 4700
+Wire Wire Line
+	5800 4700 5800 3700
+Wire Wire Line
+	5800 3700 5800 2800
+Connection ~ 5400 3600
+Wire Wire Line
+	5400 2400 5400 2200
+Connection ~ 5400 2200
+Wire Wire Line
+	5800 2200 5800 2400
+Connection ~ 5800 2200
+Wire Wire Line
+	4800 3700 5800 3700
+Connection ~ 5800 3700
+$Comp
+L R R2
+U 1 1 56672EB3
+P 5650 4200
+F 0 "R2" V 5730 4200 40  0000 C CNN
+F 1 "1M" V 5657 4201 40  0000 C CNN
+F 2 "~" V 5580 4200 30  0000 C CNN
+F 3 "~" H 5650 4200 30  0000 C CNN
+	1    5650 4200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 3800 5650 3800
+Wire Wire Line
+	5650 3800 5650 3950
+Connection ~ 5400 3800
+Wire Wire Line
+	5650 4450 5650 4600
+Wire Wire Line
+	5650 4600 5400 4600
+Connection ~ 5400 4600
+$EndSCHEMATC
