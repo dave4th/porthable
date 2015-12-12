@@ -38,7 +38,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "ATmega328 w/ DHT11, TFT LCD, ESP8266"
-Date "8 dec 2015"
+Date "12 dec 2015"
 Rev "0.0.1"
 Comp "mail4davide@gmail.com"
 Comment1 "porthable (Temperatura, Umidita`, TFT LCD, ESP8266)"
@@ -262,22 +262,6 @@ Wire Wire Line
 	10300 2200 10300 1700
 Connection ~ 9700 2200
 $Comp
-L C C2
-U 1 1 5667021A
-P 2500 3600
-F 0 "C2" H 2500 3700 40  0000 L CNN
-F 1 "0,1uF" H 2506 3515 40  0000 L CNN
-F 2 "~" H 2538 3450 30  0000 C CNN
-F 3 "~" H 2500 3600 60  0000 C CNN
-	1    2500 3600
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	2900 3600 2700 3600
-Wire Wire Line
-	2300 3600 1800 3600
-Connection ~ 1800 3600
-$Comp
 L +3,3V #PWR?
 U 1 1 566702A4
 P 1600 6600
@@ -401,25 +385,4 @@ Connection ~ 5800 2200
 Wire Wire Line
 	4800 3700 5800 3700
 Connection ~ 5800 3700
-$Comp
-L R R2
-U 1 1 56672EB3
-P 5650 4200
-F 0 "R2" V 5730 4200 40  0000 C CNN
-F 1 "1M" V 5657 4201 40  0000 C CNN
-F 2 "~" V 5580 4200 30  0000 C CNN
-F 3 "~" H 5650 4200 30  0000 C CNN
-	1    5650 4200
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5400 3800 5650 3800
-Wire Wire Line
-	5650 3800 5650 3950
-Connection ~ 5400 3800
-Wire Wire Line
-	5650 4450 5650 4600
-Wire Wire Line
-	5650 4600 5400 4600
-Connection ~ 5400 4600
 $EndSCHEMATC
