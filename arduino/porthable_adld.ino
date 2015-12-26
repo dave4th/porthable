@@ -47,8 +47,8 @@ DS1302RTC RTC(5, 6, 7);
  * Variabili accessorie per stampe sul display e memorizzazioni
  */
 // char array to print to the screen, only Humidity & Temperature ?
-char SensorTPrintout[2];
-char SensorHPrintout[2];
+char SensorTPrintout[3];
+char SensorHPrintout[3];
 char DataPrintout[11];
 char TimePrintout[9];
 
@@ -88,6 +88,13 @@ void writeTextStatic() {
   TFTscreen.text("Umidita`\n ", 0, 16);
   // write the text
   TFTscreen.text("Temperatura\n ", 0, 32);
+  // set the font size
+  TFTscreen.setTextSize(2);
+  // write the text
+  TFTscreen.text("%\n ", 103, 16);
+  // write the text
+  TFTscreen.text("C\n ", 103, 32);
+  
 }
 
 void print2digits(int number) {
@@ -196,8 +203,8 @@ void loop() {
   String sensorValT = String(Temperature);
   
   // convert the reading to a char array
-  sensorValH.toCharArray(SensorHPrintout, 2);
-  sensorValT.toCharArray(SensorTPrintout, 2);
+  sensorValH.toCharArray(SensorHPrintout, 3);
+  sensorValT.toCharArray(SensorTPrintout, 3);
   
   // Read the value from
   // String DataValT = String(tmYearToCalendar(tm.Year) + tm.Month + tm.Day + tm.Hour + tm.Minute + tm.Second); CALCOLA INVECE DI CONCATENARE !
@@ -253,11 +260,11 @@ void loop() {
   if (Humidity != MemHumidity) {
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
-    TFTscreen.text(MemSensorHPrintout, 66, 16);
+    TFTscreen.text(MemSensorHPrintout, 76, 16);
     // set the font color
     TFTscreen.stroke(0, 255, 0);
     // print the sensor value
-    TFTscreen.text(SensorHPrintout, 66, 16);
+    TFTscreen.text(SensorHPrintout, 76, 16);
     MemHumidity = Humidity;
     strcpy (MemSensorHPrintout, SensorHPrintout);
   }
@@ -266,20 +273,30 @@ void loop() {
   if (Temperature != MemTemperature) {
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
-    TFTscreen.text(MemSensorTPrintout, 66, 32);
+    TFTscreen.text(MemSensorTPrintout, 76, 32);
     // set the font color
     TFTscreen.stroke(255, 0, 0);
     // print the sensor value
-    TFTscreen.text(SensorTPrintout, 66, 32);
+    TFTscreen.text(SensorTPrintout, 76, 32);
     //ESP.println(SensorTPrintout); // ESP8266
     MemTemperature = Temperature;
     strcpy (MemSensorTPrintout, SensorTPrintout);
   }
 
 
-  // Adesso ho messo SECONDI, solo per velocizzare i test
-  //if (Minute != MemMinute) {
-  if (tm.Minute != MemMinute) {
+  /*
+   * Devo stare attento perche` questa routine dev'essere eseguita
+   * una sola volta, quindi: ATTENZIONE alle condizioni!
+   * 
+   * Aggiorno ogni mezz'ora e non m'interessa da quando ho acceso,
+   * preferisco sia "fisso", come i termostati in casa ..
+   */
+  // Questa riga aggiorna ogni minuto
+  //if (tm.Minute != MemMinute) {
+  Serial.println("====");
+  Serial.println(tm.Minute);
+  Serial.println(MemMinute);
+  if (tm.Minute != MemMinute && (tm.Minute == 0 || tm.Minute == 30)) {
     // Stampa array su LCD
     /*
     * Stampa i 128 (come i pixel) valori di temperatura e umidita`,
@@ -301,6 +318,7 @@ void loop() {
     // Quando finisce e` al 127 e posso scrivere il dato nuovo
     ArrayHumidity[CycleArray] = Humidity;
     ArrayTemperature[CycleArray] = Temperature;
+    // Memorizzo il tempo attuale
     MemMinute = tm.Minute;
     // Scrivo ..
     for (CycleArray = 127; CycleArray >= 0; CycleArray--) {
