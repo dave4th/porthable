@@ -15,3 +15,14 @@ Poi .. vedremo in cosa e se .. si evolvera`.
 * TFT LCD 1,44"
 * Modulo wifi ESP8266
 * Modulo orologio DS1302
+
+# porthable ADLD
+Composizione:
+* ATMEGA328
+* DHT11
+* LCD TFT 1,44"
+* DS1302
+
+Programmazione ATMEGA:
+<pre><code>sudo avrdude -p m328p -P /dev/spidev0.0 -c linuxspi -b 10000 -U lfuse:w:0xE2:m -U hfuse:w:0xDE:m -U efuse:w:0x06:m</code></pre>
+<pre><code>sudo avrdude -p m328p -P /dev/spidev0.0 -c linuxspi -b 10000 -U flash:w:porthable_adld.ino.hex</code></pre>
