@@ -62,7 +62,7 @@ char MemTimePrintout[9];
 //int Minute = 0;
 //int Day = 0;
 int MemSecond = 0;
-int MemMinute = 0;
+int MemMinute = 30; // Cosi` inizia sempre ad ogni ora.
 int MemDay = 0;
 
 // int array per creazione grafico
