@@ -16,6 +16,18 @@ Poi .. vedremo in cosa e se .. si evolvera`.
 * Modulo wifi ESP8266
 * Modulo orologio DS1302
 
+
+# w/ DS1302
+
+Nei 'moduli' con orologio, per prima cosa si deve configurare l'ora, dopo aver collegato all'ATMEGA il DS1302 come da circuito elettrico, caricare sul microcontrollore il programma: "porthable_DS1302_SetSerial".
+
+Le istruzioni su come procedere all'impostazione dell'ora sono indicate nel ".ino" (che contiene il codice sorgente).
+
+Questa operazione dovra\` essere ripetuta quando si scarichera` la batteria tampone.
+
+Ora potete procedere caricando sull'ATMEGA il programma vero e proprio ...
+
+
 # porthable ADLD
 
 Prima versione, composta da:
@@ -34,7 +46,3 @@ Il programma e\` stato aggiornato/modificato perche\` memorizzi la temperatura o
 
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
 
-# w/ DS1302
-
-Per configurare l'ora al modulo DS1302, dopo averlo collegato all' ATMEGA come da circuito elettrico, caricare sul microcontrollore il programma: "porthable_DS1302_SetSeral".
-Le istruzioni su come procedere sono indicate nel ".ino" (che contiene il codice sorgente).
