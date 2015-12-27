@@ -293,9 +293,6 @@ void loop() {
    */
   // Questa riga aggiorna ogni minuto
   //if (tm.Minute != MemMinute) {
-  Serial.println("====");
-  Serial.println(tm.Minute);
-  Serial.println(MemMinute);
   if (tm.Minute != MemMinute && (tm.Minute == 0 || tm.Minute == 30)) {
     // Stampa array su LCD
     /*

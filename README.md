@@ -33,3 +33,8 @@ Il programma contiene ancora tutti i riferimenti alla configurazione completa, m
 Il programma e\` stato aggiornato/modificato perche\` memorizzi la temperatura ogni mezz'ora, ai minuti 00 e 30.
 
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
+
+# w/ DS1302
+
+Per configurare l'ora al modulo DS1302, dopo averlo collegato all' ATMEGA come da circuito elettrico, caricare sul microcontrollore il programma: "porthable_DS1302_SetSeral".
+Le istruzioni su come procedere sono indicate nel ".ino" (che contiene il codice sorgente).
