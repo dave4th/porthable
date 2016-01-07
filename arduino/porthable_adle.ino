@@ -1,24 +1,24 @@
 /*
  * Programma per la lettura di una sonda DHT11, ovvero, Temperatura e Umidita`.
  * Oltre alla visualizzazione su schermo TFT LCD dei valori in formato testo,
- * viene realizzato un grafico temporale, con l'ausilio di un integrato DS1302
- * con relativo modulo completo di batteria tampone.
- * Se possibile, sara` aggiunto un ESP8266 per la trasmissione dei dati o
- * per la lettura tramite pagina web, da decidere ...
+ * viene realizzato un grafico temporale, con l'ausilio di un ESP8266.
+ * Tramite quest'ultimo, i dati delle letture verranno inviati ad un MQTT Broker.
  * 
- * PortableTHLE:
- * . Temperatura
- * . Umidita`
- * . LCD
+ * Versione MQTT: porthable ADLE
+ * . ATMEGA
+ * . DHT11
+ * . LCD TFT 1,44"
  * . ESP8266
  */
 
 #include <TFT.h>  // Arduino LCD library
-#include <SPI.h>
+//#include <SPI.h>
 #include <dht.h>
-#include <DS1302RTC.h>
-#include <Time.h>
-#include <SoftwareSerial.h>
+//#include <DS1302RTC.h>
+//#include <Time.h>
+#include <SoftwareSerial.h> // ESP8266
+#include <TimeLib.h>        // Libreria per gestione data/ora
+
 
 // TFT LCD
 // pin definition for the LCD (Uno, Nano)
@@ -33,24 +33,24 @@ TFT TFTscreen = TFT(cs, dc, rst);
 dht DHT;
 #define DHT11_PIN 4
 
-float Humidity;
-float Temperature;
-float MemHumidity = 0;
-float MemTemperature = 0;
+int Humidity;
+int Temperature;
+int MemHumidity = 0;
+int MemTemperature = 0;
 
 // Init the DS1302
 // Set pins:  CE, IO,CLK
-DS1302RTC RTC(5, 6, 7);
+//DS1302RTC RTC(5, 6, 7);
 
 // ESP8266
-SoftwareSerial ESP(2,3); // RX e` il 2,TX e` il 3, collegati a ESP8266
+SoftwareSerial espSerial(2,3); // RX e` il 2,TX e` il 3, collegati a ESP8266
 
 /*
  * Variabili accessorie per stampe sul display e memorizzazioni
  */
 // char array to print to the screen, only Humidity & Temperature ?
-char SensorTPrintout[6];
-char SensorHPrintout[6];
+char SensorTPrintout[3];
+char SensorHPrintout[3];
 char DataPrintout[11];
 char TimePrintout[9];
 
@@ -60,11 +60,14 @@ char MemSensorTPrintout[6];
 char MemDataPrintout[11];
 char MemTimePrintout[9];
 
-//int Second = 0;
-//int Minute = 0;
-//int Day = 0;
-int MemSecond = 0;
-int MemMinute = 0;
+int Day = 1;
+int Month = 1;
+int Year = 2016;
+int Hours = 1;
+int Minutes = 1;
+int Seconds = 1;
+int MemSeconds = 0;
+int MemMinutes = 30; // Cosi` inizia sempre ad ogni ora.
 int MemDay = 0;
 
 // int array per creazione grafico
@@ -90,22 +93,44 @@ void writeTextStatic() {
   TFTscreen.text("Umidita`\n ", 0, 16);
   // write the text
   TFTscreen.text("Temperatura\n ", 0, 32);
+  // set the font size
+  TFTscreen.setTextSize(2);
+  // write the text
+  TFTscreen.text("%\n ", 103, 16);
+  // write the text
+  TFTscreen.text("C\n ", 103, 32);
+  
 }
 
+/*
+ * Era usata dalla RTC, non serve ora.
 void print2digits(int number) {
   if (number >= 0 && number < 10)
     Serial.write('0');
   Serial.print(number);
 }
+ */
 
 void setup() {
+
+  /*
+  * Visto che si avvia sempre con orario 1970 ....
+  * fisso una data che permetta il corretto funzionamento,
+  * altrimenti il grafico inizia sempre all'accensione,
+  * mentre deve rispettare la mezz'ora impostata.
+  * 
+  * setTime(Ora,Minuti,Secondi,Giorno,Mese,Anno);
+  */
+  setTime(Hours,Minutes,Seconds,Day,Month,Year); // alternative to above, yr is 2 or 4 digit yr (2010 or 10 sets year to 2010)
+
   // Setup Serial connection
   Serial.begin(9600);
 
   // Setup serial ESP8266
-  ESP.begin(115200);
-  ESP.setTimeout(15000);
+  espSerial.begin(9600);
+  espSerial.setTimeout(15000);
   
+/*
   Serial.println("DS1302RTC Read Test");
   Serial.println("-------------------");
   
@@ -123,8 +148,7 @@ void setup() {
     Serial.println("The DS1302 is write protected. This normal.");
     Serial.println();
   }
-  
-  //delay(5000);
+*/
 
   // TFT
   // Put this line at the beginning of every sketch that uses the GLCD:
@@ -140,6 +164,7 @@ void setup() {
 
 void loop() {
 
+/*
   //RTC
   tmElements_t tm;
   
@@ -167,32 +192,37 @@ void loop() {
     Serial.println();
     delay(9000);
   }
+*/
 
   // DHT11
   // READ DATA
-  Serial.print("DHT11, \t");
+  /*
+   * Cambio, elimino le stampe a seriale, lascio solo quelle di errore
+   * Sposto la lettura dei valori sull'OK.
+   */
+  //Serial.print("DHT11, \t");
   int chk = DHT.read11(DHT11_PIN);
   switch (chk)
   {
     case DHTLIB_OK:
-      Serial.print("OK,\t");
+      //Serial.print("OK,\t");
+      Temperature = DHT.temperature;
+      Humidity = DHT.humidity;
       break;
     case DHTLIB_ERROR_CHECKSUM:
-      Serial.print("Checksum error,\t");
+      Serial.println("DHT11: Checksum error,\t");
       break;
     case DHTLIB_ERROR_TIMEOUT:
-      Serial.print("Time out error,\t");
+      Serial.println("DHT11: Time out error,\t");
       break;
     default:
-      Serial.print("Unknown error,\t");
+      Serial.println("DHT11: Unknown error,\t");
       break;
   }
   // DISPLAY DATA
-  Temperature = DHT.temperature;
-  Humidity = DHT.humidity;
-  Serial.print(Humidity, 1);
-  Serial.print(",\t");
-  Serial.println(Temperature, 1);
+  //Serial.print(Humidity, 1);
+  //Serial.print(",\t");
+  //Serial.println(Temperature, 1);
 
   // LCD
   // Read the value from DHT11
@@ -200,18 +230,40 @@ void loop() {
   String sensorValT = String(Temperature);
   
   // convert the reading to a char array
-  sensorValH.toCharArray(SensorHPrintout, 6);
-  sensorValT.toCharArray(SensorTPrintout, 6);
-  
-  // Read the value from
-  // String DataValT = String(tmYearToCalendar(tm.Year) + tm.Month + tm.Day + tm.Hour + tm.Minute + tm.Second); CALCOLA INVECE DI CONCATENARE !
-  String DataVal1 = String(tmYearToCalendar(tm.Year));
-  String DataVal2 = String(DataVal1 + "-" + tm.Month);
-  String DataValDay = String(DataVal2 + "-" + tm.Day);
-  String DataVal3 = String(tm.Hour);
-  String DataVal4 = String(DataVal3 + ":" + tm.Minute);
-  String DataValTime = String(DataVal4 + ":" + tm.Second);
-  int Second = tm.Second;
+  sensorValH.toCharArray(SensorHPrintout, 3);
+  sensorValT.toCharArray(SensorTPrintout, 3);
+
+  // Gestione DATA/ORA proveniente da ESP8266 via seriale
+  while (espSerial.available() > 0) {
+    String inString = espSerial.readStringUntil('\n');
+    Serial.println(inString);
+    // Se la stringa inizia per ... la riga successiva conterra` la data e ora
+    if (inString.startsWith("Date:")) {
+      Day = espSerial.parseInt();
+      Month = espSerial.parseInt();
+      Year = espSerial.parseInt();
+      Hours = espSerial.parseInt();
+      Minutes = espSerial.parseInt();
+      Seconds = espSerial.parseInt();
+      // Non mi voglio complicare la vita, la faccio semplice, una volta al giorno
+      if (Day != MemDay) {
+        setTime(Hours,Minutes,Seconds,Day,Month,Year); // alternative to above, yr is 2 or 4 digit yr (2010 or 10 sets year to 2010)
+      }
+      Serial.println(now());
+    }
+  }
+
+  /*
+   * Queste le devo comunque eseguire ..
+   * servono per la conversione in stringa e la stampa sul display
+   * (Ho messo i "." come la stringa dell'ESP)
+   */
+  String DataVal1 = String(year());
+  String DataVal2 = String(DataVal1 + "." + month());
+  String DataValDay = String(DataVal2 + "." + day());
+  String DataVal3 = String(hour());
+  String DataVal4 = String(DataVal3 + ":" + minute());
+  String DataValTime = String(DataVal4 + ":" + second());
   DataValDay.toCharArray(DataPrintout, 11);
   DataValTime.toCharArray(TimePrintout, 9);
   
@@ -224,7 +276,11 @@ void loop() {
    *  [ri]scrivo la memoria e poi il valore,
    *  poi metto la memoria uguale al valore
    */
-  if (tm.Day != MemDay) {
+  if (Day != MemDay) {
+    /*Serial.print("Compare: ");
+    Serial.print(MemDataPrintout);
+    Serial.print(" - ");
+    Serial.println(DataPrintout);*/
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
     TFTscreen.text(MemDataPrintout, 0, 8);
@@ -233,11 +289,21 @@ void loop() {
     // print
     TFTscreen.text(DataPrintout, 0, 8);
     // Memorie
-    MemDay = tm.Day;
+    MemDay = Day;
     strcpy (MemDataPrintout, DataPrintout);
   }
 
-  if (tm.Second != MemSecond) {
+  /*
+   * L'utilizzo dei secondi non e` propriamente corretto, perche` potrebbe
+   * per pura coincidenza, ripetersi un cambio lettura al medesimo "secondo"
+   * ma di un minuto/i successivo/i .. solo che non funziona la comparazione
+   * fra le stringhe ..
+   */
+  if (second() != MemSeconds) {
+    /*Serial.print("Compare: ");
+    Serial.print(MemTimePrintout);
+    Serial.print(" - ");
+    Serial.println(TimePrintout);*/
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
     TFTscreen.text(MemTimePrintout, 66, 8);
@@ -246,7 +312,7 @@ void loop() {
     // print
     TFTscreen.text(TimePrintout, 66, 8);
     // Memorie
-    MemSecond = tm.Second;
+    MemSeconds = second();
     strcpy (MemTimePrintout, TimePrintout);
   }
 
@@ -257,11 +323,11 @@ void loop() {
   if (Humidity != MemHumidity) {
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
-    TFTscreen.text(MemSensorHPrintout, 66, 16);
+    TFTscreen.text(MemSensorHPrintout, 76, 16);
     // set the font color
     TFTscreen.stroke(0, 255, 0);
     // print the sensor value
-    TFTscreen.text(SensorHPrintout, 66, 16);
+    TFTscreen.text(SensorHPrintout, 76, 16);
     MemHumidity = Humidity;
     strcpy (MemSensorHPrintout, SensorHPrintout);
   }
@@ -270,20 +336,26 @@ void loop() {
   if (Temperature != MemTemperature) {
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
-    TFTscreen.text(MemSensorTPrintout, 66, 32);
+    TFTscreen.text(MemSensorTPrintout, 76, 32);
     // set the font color
     TFTscreen.stroke(255, 0, 0);
     // print the sensor value
-    TFTscreen.text(SensorTPrintout, 66, 32);
-    ESP.println(SensorTPrintout); // ESP8266
+    TFTscreen.text(SensorTPrintout, 76, 32);
+    espSerial.println(SensorTPrintout); // ESP8266
     MemTemperature = Temperature;
     strcpy (MemSensorTPrintout, SensorTPrintout);
   }
 
 
-  // Adesso ho messo SECONDI, solo per velocizzare i test
-  //if (Minute != MemMinute) {
-  if (tm.Minute != MemMinute) {
+  /*
+   * Devo stare attento perche` questa routine dev'essere eseguita
+   * una sola volta, quindi: ATTENZIONE alle condizioni!
+   * 
+   * Aggiorno ogni mezz'ora e non m'interessa da quando ho acceso,
+   * preferisco sia "fisso", come i termostati in casa ..
+   */
+  // Questa riga aggiorna ogni minuto
+  if (minute() != MemMinutes && (minute() == 0 || minute() == 30)) {
     // Stampa array su LCD
     /*
     * Stampa i 128 (come i pixel) valori di temperatura e umidita`,
@@ -305,7 +377,8 @@ void loop() {
     // Quando finisce e` al 127 e posso scrivere il dato nuovo
     ArrayHumidity[CycleArray] = Humidity;
     ArrayTemperature[CycleArray] = Temperature;
-    MemMinute = tm.Minute;
+    // Memorizzo il tempo attuale
+    MemMinutes = minute();
     // Scrivo ..
     for (CycleArray = 127; CycleArray >= 0; CycleArray--) {
       TFTscreen.stroke(0, 255, 0);
@@ -315,86 +388,6 @@ void loop() {
     }
   }
 
-/*
-  // Stampe a video (seriale) per verifiche
-  Serial.print("\n"); 
-  Serial.print(DHT.humidity);
-  Serial.print(",\t");
-  Serial.print(DHT.temperature);
-
-  Serial.print("\n");
-  Serial.print(sensorValH);
-  Serial.print(",\t");
-  Serial.print(sensorValT);
-  
-  Serial.print("\n");
-  Serial.print(SensorHPrintout);
-  Serial.print(",\t");
-  Serial.print(SensorTPrintout);
-  
-  Serial.print("\n");
-  Serial.print(MemSensorHPrintout);
-  Serial.print(",\t");
-  Serial.print(MemSensorTPrintout);
-  
-  Serial.print("\nHumidity, Temperature\n");
-  Serial.print(Humidity);
-  Serial.print(",\t");
-  Serial.print(Temperature);
-  
-  Serial.print("\n");
-  Serial.print(MemHumidity);
-  Serial.print(",\t");
-  Serial.print(MemTemperature);
-  
-  Serial.print("\nDataValT, DataPrintout\n");
-  Serial.print(DataValT);
-  Serial.print(",\t");
-  Serial.print(DataPrintout);
-  
-  Serial.print("\nSecond, Memory\n");
-  Serial.print(Second);
-  Serial.print(",\t");
-  Serial.print(MemSecond);
-  Serial.print("\n");
-
-  Serial.print("\nLarghezza, Altezza\n");
-  Serial.print(TFTscreen.width());
-  Serial.print(",\t");
-  Serial.print(TFTscreen.height());
-  Serial.print("\n");
-  
-  Serial.print("\nMinuti,\n");
-  Serial.print(tm.Minute);
-  Serial.print(",\t");
-  Serial.print(MemMinute);
-  Serial.print(",\t");
-  Serial.print(CycleArray);
-  Serial.print("\n");
-  
-  Serial.print("\nArray ...\n");
-  int i;
-  for (i = 0; i < 128; i = i + 1) {
-    Serial.print(ArrayTemperature[i]);
-    Serial.print(",");
-  }
-  Serial.print("\n");
-  //int i;
-  for (i = 0; i < 128; i = i + 1) {
-    Serial.print(ArrayHumidity[i]);
-    Serial.print(",");
-  }
-  Serial.print("\n");
-
-  /*
-  TFTscreen.stroke(255, 0, 0);
-  // draw a pixel in the screen's center
-  TFTscreen.point(TFTscreen.width()/2, TFTscreen.height()/2);
-  TFTscreen.point(64, 64);
-  TFTscreen.point(65, 65);
-  TFTscreen.point(66, 66);
-  */
-  
   /*
    * Mi sa che i delay serva per la stabilita` delle letture
    * Cerco di tenerlo il piu` basso possibile, a 200 funziona, metto 300 per sicurezza

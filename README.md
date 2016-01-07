@@ -46,3 +46,15 @@ Il programma e\` stato aggiornato/modificato perche\` memorizzi la temperatura o
 
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
 
+# porthable ADLE
+
+Seconda versione, composta da:
+* ATMEGA328P
+* DHT11
+* LCD TFT 1,44"
+* ESP8266
+
+Il programma e` stato ampiamente rivisto, ma contiene ancora qualche riferimento alla configurazione completa, sono stati commentati i blocchi inutilizzati.
+
+Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
+
