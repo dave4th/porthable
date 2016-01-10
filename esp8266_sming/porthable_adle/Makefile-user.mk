@@ -30,7 +30,7 @@ COM_PORT = /dev/ttyAMA0
 COM_SPEED	= 115200
 
 # SPIFFs Location
-#SPIFF_FILES = web
+SPIFF_FILES = web/build
 
 ## Configure flash parameters (for ESP12-E and other new boards):
 # SPI_MODE = dio
