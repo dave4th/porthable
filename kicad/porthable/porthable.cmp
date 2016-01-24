@@ -1,0 +1,129 @@
+Cmp-Mod V01 Created by PcbNew date = Sun 17 Jan 2016 08:05:22 PM CET
+
+BeginCmp
+TimeStamp = /568E244A;
+Reference = BT1;
+ValeurCmp = CR 2032;
+IdModule  = CR2032H;
+EndCmp
+
+BeginCmp
+TimeStamp = /56672C56;
+Reference = C1;
+ValeurCmp = 22pF;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /56672C6F;
+Reference = C2;
+ValeurCmp = 22pF;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /56670337;
+Reference = C3;
+ValeurCmp = 4,7uF;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5666F771;
+Reference = IC1;
+ValeurCmp = ATMEGA328-P;
+IdModule  = DIP-28__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /568E2716;
+Reference = P1;
+ValeurCmp = DHT11;
+IdModule  = SIL-4;
+EndCmp
+
+BeginCmp
+TimeStamp = /567E9538;
+Reference = P2;
+ValeurCmp = Program w/R.Pi;
+IdModule  = SIL-5;
+EndCmp
+
+BeginCmp
+TimeStamp = /567FE68B;
+Reference = P3;
+ValeurCmp = Serial;
+IdModule  = SIL-4;
+EndCmp
+
+BeginCmp
+TimeStamp = /56672AC8;
+Reference = R1;
+ValeurCmp = 10K;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /566C71E2;
+Reference = R2;
+ValeurCmp = 4.7K;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /569BE382;
+Reference = RV1;
+ValeurCmp = 10K;
+IdModule  = POT_CMS;
+EndCmp
+
+BeginCmp
+TimeStamp = /565B3034;
+Reference = S1;
+ValeurCmp = DISPLAY_128X128SPI;
+IdModule  = SIL-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /566D2F91;
+Reference = SW1;
+ValeurCmp = RESET;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /567E7B08;
+Reference = SW2;
+ValeurCmp = Supply EXT/INT;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /566699E3;
+Reference = U1;
+ValeurCmp = ESP8266;
+IdModule  = pin_array_4x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /568E1D1C;
+Reference = U2;
+ValeurCmp = DS1302;
+IdModule  = DIP-8__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /568E1D4D;
+Reference = X1;
+ValeurCmp = 323768K;
+IdModule  = SIL-2;
+EndCmp
+
+BeginCmp
+TimeStamp = /56672C7C;
+Reference = X2;
+ValeurCmp = 16,000M;
+IdModule  = HC-49V;
+EndCmp
+
+EndListe

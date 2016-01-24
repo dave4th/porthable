@@ -8,7 +8,13 @@
  * . ATMEGA
  * . DHT11
  * . LCD TFT 1,44"
- * . ESP8266
+ * . ESP8266 su seriale standard arduino
+ * . Potenziometro per regolazione tempi grafico
+ * 
+ * Visto che utilizzo la seriale standard, non posso mandargli
+ * messaggi di stato o di errore, perche` il modulo ESP le
+ * invierebbe come dati al broker MQTT.
+ * Forse a video ?
  */
 
 #include <TFT.h>  // Arduino LCD library
@@ -16,7 +22,7 @@
 #include <dht.h>
 //#include <DS1302RTC.h>
 //#include <Time.h>
-#include <SoftwareSerial.h> // ESP8266
+//#include <SoftwareSerial.h> // ESP8266
 #include <TimeLib.h>        // Libreria per gestione data/ora
 
 
@@ -43,7 +49,7 @@ int MemTemperature = 0;
 //DS1302RTC RTC(5, 6, 7);
 
 // ESP8266
-SoftwareSerial espSerial(2,3); // RX e` il 2,TX e` il 3, collegati a ESP8266
+//SoftwareSerial espSerial(2,3); // RX e` il 2,TX e` il 3, collegati a ESP8266
 
 /*
  * Variabili accessorie per stampe sul display e memorizzazioni
@@ -67,7 +73,7 @@ int Hours = 1;
 int Minutes = 1;
 int Seconds = 1;
 int MemSeconds = 0;
-int MemMinutes = 30; // Cosi` inizia sempre ad ogni ora.
+int MemMinutes = 1;
 int MemDay = 0;
 
 // int array per creazione grafico
@@ -80,19 +86,57 @@ int ArrayTemperature[128];
 int ArrayHumidity[128];
 int CycleArray = 0; // Valori ciclici da 0 a 127
 
+//Variabili per Potenziometro
+int PotPin = A0;
+int PotValue = 0;
+int TimeGraph = 0;
+int MemTimeGraph = 0;
+char TimeGraphPrintout[3];
+char MemTimeGraphPrintout[3];
+// e Grafico
+char TotalTimeGraphPrintout[5];
+char MemTotalTimeGraphPrintout[5];
+
+
 void writeTextStatic() {
+  /*
+   * Le lettere sono alte 7 e larghe 5
+   * Quindi considerare 6 di occupazione orizzontale
+  */ 
   // write the static text to the screen
-  // set the font color to white
-  TFTscreen.stroke(255, 255, 255);
+  // set the font color to gray
+  TFTscreen.stroke(128, 128, 128);
   // set the font size
   TFTscreen.setTextSize(1);
   // write the text to the top left corner of the screen
   // write the text
-  TFTscreen.text("Data       Ora\n ", 0, 0);
+  TFTscreen.text("Data       Ora", 0, 0);
   // write the text
-  TFTscreen.text("Umidita`\n ", 0, 16);
+  TFTscreen.text("Umidita`", 0, 16);
   // write the text
-  TFTscreen.text("Temperatura\n ", 0, 32);
+  TFTscreen.text("Temperatura", 0, 32);
+  // write the text
+  TFTscreen.text("Campionamento", 0, 48);
+  // write the text
+  TFTscreen.text("min.", 103, 48);
+  // write the text
+  TFTscreen.text("In memoria", 0, 56);
+  // write the text
+  TFTscreen.text("min.", 103, 56);
+  /*
+   * Volevo mettere delle tacche, ha senso ?
+   * .. write ..
+   */
+  TFTscreen.stroke(64, 64, 64);  // gray 75%
+  TFTscreen.text("50 -  -  -  -  -  -  -", 0, 74);
+  TFTscreen.text("40 -  -  -  -  -  -  -", 0, 84);
+  TFTscreen.text("30 -  -  -  -  -  -  -", 0, 94);
+  TFTscreen.text("20 -  -  -  -  -  -  -", 0, 104);
+  TFTscreen.text("10 -  -  -  -  -  -  -", 0, 114);
+  TFTscreen.text("0", 0, 120);
+  
+  // set the font color to white
+  TFTscreen.stroke(128, 128, 128);
   // set the font size
   TFTscreen.setTextSize(2);
   // write the text
@@ -126,9 +170,13 @@ void setup() {
   // Setup Serial connection
   Serial.begin(9600);
 
+  //Serial.println("Serial.begin(9600)");
+
   // Setup serial ESP8266
-  espSerial.begin(9600);
-  espSerial.setTimeout(15000);
+  //espSerial.begin(9600);
+  //Serial.println("espSerial.begin(9600)");
+
+  //espSerial.setTimeout(15000);
   
 /*
   Serial.println("DS1302RTC Read Test");
@@ -160,10 +208,13 @@ void setup() {
   writeTextStatic();
   
   delay(2000);
+  //Serial.println("* END setup! *");
+
 }
 
 void loop() {
 
+  //Serial.println("* Start LOOP *");
 /*
   //RTC
   tmElements_t tm;
@@ -210,13 +261,13 @@ void loop() {
       Humidity = DHT.humidity;
       break;
     case DHTLIB_ERROR_CHECKSUM:
-      Serial.println("DHT11: Checksum error,\t");
+      //Serial.println("DHT11: Checksum error,\t");
       break;
     case DHTLIB_ERROR_TIMEOUT:
-      Serial.println("DHT11: Time out error,\t");
+      //Serial.println("DHT11: Time out error,\t");
       break;
     default:
-      Serial.println("DHT11: Unknown error,\t");
+      //Serial.println("DHT11: Unknown error,\t");
       break;
   }
   // DISPLAY DATA
@@ -234,22 +285,22 @@ void loop() {
   sensorValT.toCharArray(SensorTPrintout, 3);
 
   // Gestione DATA/ORA proveniente da ESP8266 via seriale
-  while (espSerial.available() > 0) {
-    String inString = espSerial.readStringUntil('\n');
-    Serial.println(inString);
+  while (Serial.available() > 0) {
+    String inString = Serial.readStringUntil('\n');
+    //Serial.println(inString);
     // Se la stringa inizia per ... la riga successiva conterra` la data e ora
     if (inString.startsWith("Date:")) {
-      Day = espSerial.parseInt();
-      Month = espSerial.parseInt();
-      Year = espSerial.parseInt();
-      Hours = espSerial.parseInt();
-      Minutes = espSerial.parseInt();
-      Seconds = espSerial.parseInt();
+      Day = Serial.parseInt();
+      Month = Serial.parseInt();
+      Year = Serial.parseInt();
+      Hours = Serial.parseInt();
+      Minutes = Serial.parseInt();
+      Seconds = Serial.parseInt();
       // Non mi voglio complicare la vita, la faccio semplice, una volta al giorno
       if (Day != MemDay) {
         setTime(Hours,Minutes,Seconds,Day,Month,Year); // alternative to above, yr is 2 or 4 digit yr (2010 or 10 sets year to 2010)
       }
-      Serial.println(now());
+      //Serial.println(now());
     }
   }
 
@@ -316,7 +367,7 @@ void loop() {
     strcpy (MemTimePrintout, TimePrintout);
   }
 
-  // ste the font size for date/time
+  // ste the font size for humidity/temperature
   TFTscreen.setTextSize(2);
 
   // Humidity
@@ -341,21 +392,53 @@ void loop() {
     TFTscreen.stroke(255, 0, 0);
     // print the sensor value
     TFTscreen.text(SensorTPrintout, 76, 32);
-    espSerial.println(SensorTPrintout); // ESP8266
+    Serial.println(SensorTPrintout); // ESP8266
     MemTemperature = Temperature;
     strcpy (MemSensorTPrintout, SensorTPrintout);
   }
 
+  // ste the font size for potentiometer
+  TFTscreen.setTextSize(1);
+
+  /*
+   * Inserisco qua la gestione del potenziometro e del grafico
+   */
+  PotValue = analogRead(PotPin);
+  TimeGraph = map(PotValue,0,1023,1,31);  // da 1 a 30 minuti, ho dovuto restringere il campo causa sensibilita` potenziometro
+  // Potenziometro
+  String stringTimeGraph = String(TimeGraph);
+  // convert the reading to a char array
+  stringTimeGraph.toCharArray(TimeGraphPrintout, 3);
+  // Grafico
+  String stringTimeGraph128 = String(TimeGraph * 128);
+  // convert the reading to a char array
+  stringTimeGraph128.toCharArray(TotalTimeGraphPrintout, 5);
+  if (TimeGraph != MemTimeGraph) {
+    // erase the text you just wrote
+    TFTscreen.stroke(0, 0, 0);
+    TFTscreen.text(MemTimeGraphPrintout, 88, 48);
+    TFTscreen.text(MemTotalTimeGraphPrintout, 76, 56);
+    // set the font color
+    TFTscreen.stroke(0, 0, 255);
+    // print the sensor value
+    TFTscreen.text(TimeGraphPrintout, 88, 48);
+    TFTscreen.text(TotalTimeGraphPrintout, 76, 56);
+    MemTimeGraph = TimeGraph;
+    strcpy (MemTimeGraphPrintout, TimeGraphPrintout);
+    strcpy (MemTotalTimeGraphPrintout, TotalTimeGraphPrintout);
+  }
 
   /*
    * Devo stare attento perche` questa routine dev'essere eseguita
    * una sola volta, quindi: ATTENZIONE alle condizioni!
    * 
-   * Aggiorno ogni mezz'ora e non m'interessa da quando ho acceso,
+   * Aggiorno ogni X-minuto/i non m'interessa da quando ho acceso,
    * preferisco sia "fisso", come i termostati in casa ..
+   * 
+   * Aggiorna una sola volta nello stesso minuto, 
+   * e aggiorna solo se la divisione non da` resto
    */
-  // Questa riga aggiorna ogni minuto
-  if (minute() != MemMinutes && (minute() == 0 || minute() == 30)) {
+  if (minute() != MemMinutes && (minute() % TimeGraph == 0)) {
     // Stampa array su LCD
     /*
     * Stampa i 128 (come i pixel) valori di temperatura e umidita`,

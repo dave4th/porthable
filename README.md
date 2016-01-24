@@ -42,8 +42,6 @@ Programmazione ATMEGA328P:
 
 Il programma contiene ancora tutti i riferimenti alla configurazione completa, ma sono stati commentati i blocchi inutilizzati.
 
-Il programma e\` stato aggiornato/modificato perche\` memorizzi la temperatura ogni mezz'ora, ai minuti 00 e 30.
-
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
 
 # porthable ADLE
@@ -58,3 +56,19 @@ Il programma e` stato ampiamente rivisto, ma contiene ancora qualche riferimento
 
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
 
+# Aggiornamenti 2016 01 24
+
+Ho eliminato la seriale software, troppi problemi, collegando l'ESP sulla seriale standard dell'ATMEGA.
+
+Ho aggiunto un potenziometro per selezionare/modificare i tempi di refresh del grafico.
+
+Ho modificato la visualizzazione sul display,
+ aggiungendo i tempi grafico e qualche tacca di riferimento,
+ forse ho esagerato ..
+
+Il programma testato e` solamente quello della versione ADLE,
+ nell'altro mi sono limitato a copiare le parti, quindi e` da provare.
+
+Modificato circuito elettrico.
+
+Elimino i ".hex" dal repository github (sapete come ricavarli dai sorgenti ;) )

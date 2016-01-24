@@ -1,38 +1,44 @@
-eeschema (22-Jun-2014 BZR 4027)-stable  >> Creation date: Wed 30 Dec 2015 07:08:34 PM CET
+eeschema (22-Jun-2014 BZR 4027)-stable  >> Creation date: Sun 17 Jan 2016 07:59:23 PM CET
 #Cmp ( order = Reference )
-| C1         4,7uF       
-| C3         22pF        
-| C4         22pF        
+| BT1        CR 2032     
+| C1         22pF        
+| C2         22pF        
+| C3         4,7uF       
 | IC1        ATMEGA328-P 
-| P1         Program w/R.Pi
-| P2         DHT11       
-| P3         DS1302      
-| P4         Serial      
+| P1         DHT11       
+| P2         Program w/R.Pi
+| P3         Serial      
 | R1         10K         
 | R2         4.7K        
+| RV1        10K         
 | S1         DISPLAY_128X128SPI
 | SW1        RESET       
 | SW2        Supply EXT/INT
-| U2         ESP8266     
-| X1         16000M      
+| U1         ESP8266     
+| U2         DS1302      
+| X1         323768K     
+| X2         16,000M     
 #End Cmp
 
 #Cmp ( order = Value )
-| 22pF         C3        
-| 22pF         C4        
-| 4,7uF        C1        
+| CR 2032      BT1       
+| 22pF         C1        
+| 22pF         C2        
+| 4,7uF        C3        
 | ATMEGA328-P  IC1       
-| Program w/R.Pi P1        
-| DHT11        P2        
-| DS1302       P3        
-| Serial       P4        
+| DHT11        P1        
+| Program w/R.Pi P2        
+| Serial       P3        
 | 4.7K         R2        
 | 10K          R1        
+| 10K          RV1       
 | DISPLAY_128X128SPI S1        
 | RESET        SW1       
 | Supply EXT/INT SW2       
-| ESP8266      U2        
-| 16000M       X1        
+| ESP8266      U1        
+| DS1302       U2        
+| 16,000M      X2        
+| 323768K      X1        
 #End Cmp
 
 #End List

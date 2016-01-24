@@ -9,6 +9,7 @@
  * . DHT11
  * . LCD TFT 1,44"
  * . DS1302
+ * . Potenziometro per regolazione tempi grafico
  */
 
 #include <TFT.h>  // Arduino LCD library
@@ -61,8 +62,8 @@ char MemTimePrintout[9];
 //int Second = 0;
 //int Minute = 0;
 //int Day = 0;
-int MemSecond = 0;
-int MemMinute = 30; // Cosi` inizia sempre ad ogni ora.
+int MemSeconds = 0;
+int MemMinutes = 30; // Cosi` inizia sempre ad ogni ora.
 int MemDay = 0;
 
 // int array per creazione grafico
@@ -75,19 +76,56 @@ int ArrayTemperature[128];
 int ArrayHumidity[128];
 int CycleArray = 0; // Valori ciclici da 0 a 127
 
+//Variabili per Potenziometro
+int PotPin = A0;
+int PotValue = 0;
+int TimeGraph = 0;
+int MemTimeGraph = 0;
+char TimeGraphPrintout[3];
+char MemTimeGraphPrintout[3];
+// e Grafico
+char TotalTimeGraphPrintout[5];
+char MemTotalTimeGraphPrintout[5];
+
 void writeTextStatic() {
+  /*
+   * Le lettere sono alte 7 e larghe 5
+   * Quindi considerare 6 di occupazione orizzontale
+  */ 
   // write the static text to the screen
-  // set the font color to white
-  TFTscreen.stroke(255, 255, 255);
+  // set the font color to gray
+  TFTscreen.stroke(128, 128, 128);
   // set the font size
   TFTscreen.setTextSize(1);
   // write the text to the top left corner of the screen
   // write the text
-  TFTscreen.text("Data       Ora\n ", 0, 0);
+  TFTscreen.text("Data       Ora", 0, 0);
   // write the text
-  TFTscreen.text("Umidita`\n ", 0, 16);
+  TFTscreen.text("Umidita`", 0, 16);
   // write the text
-  TFTscreen.text("Temperatura\n ", 0, 32);
+  TFTscreen.text("Temperatura", 0, 32);
+  // write the text
+  TFTscreen.text("Campionamento", 0, 48);
+  // write the text
+  TFTscreen.text("min.", 103, 48);
+  // write the text
+  TFTscreen.text("In memoria", 0, 56);
+  // write the text
+  TFTscreen.text("min.", 103, 56);
+  /*
+   * Volevo mettere delle tacche, ha senso ?
+   * .. write ..
+   */
+  TFTscreen.stroke(64, 64, 64);  // gray 75%
+  TFTscreen.text("50 -  -  -  -  -  -  -", 0, 74);
+  TFTscreen.text("40 -  -  -  -  -  -  -", 0, 84);
+  TFTscreen.text("30 -  -  -  -  -  -  -", 0, 94);
+  TFTscreen.text("20 -  -  -  -  -  -  -", 0, 104);
+  TFTscreen.text("10 -  -  -  -  -  -  -", 0, 114);
+  TFTscreen.text("0", 0, 120);
+  
+  // set the font color to white
+  TFTscreen.stroke(128, 128, 128);
   // set the font size
   TFTscreen.setTextSize(2);
   // write the text
@@ -240,7 +278,7 @@ void loop() {
     strcpy (MemDataPrintout, DataPrintout);
   }
 
-  if (tm.Second != MemSecond) {
+  if (tm.Second != MemSeconds) {
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
     TFTscreen.text(MemTimePrintout, 66, 8);
@@ -249,7 +287,7 @@ void loop() {
     // print
     TFTscreen.text(TimePrintout, 66, 8);
     // Memorie
-    MemSecond = tm.Second;
+    MemSeconds = tm.Second;
     strcpy (MemTimePrintout, TimePrintout);
   }
 
@@ -283,6 +321,33 @@ void loop() {
     strcpy (MemSensorTPrintout, SensorTPrintout);
   }
 
+  /*
+   * Inserisco qua la gestione del potenziometro e del grafico
+   */
+  PotValue = analogRead(PotPin);
+  TimeGraph = map(PotValue,0,1023,1,31);  // da 1 a 30 minuti, ho dovuto restringere il campo causa sensibilita` potenziometro
+  // Potenziometro
+  String stringTimeGraph = String(TimeGraph);
+  // convert the reading to a char array
+  stringTimeGraph.toCharArray(TimeGraphPrintout, 3);
+  // Grafico
+  String stringTimeGraph128 = String(TimeGraph * 128);
+  // convert the reading to a char array
+  stringTimeGraph128.toCharArray(TotalTimeGraphPrintout, 5);
+  if (TimeGraph != MemTimeGraph) {
+    // erase the text you just wrote
+    TFTscreen.stroke(0, 0, 0);
+    TFTscreen.text(MemTimeGraphPrintout, 88, 48);
+    TFTscreen.text(MemTotalTimeGraphPrintout, 76, 56);
+    // set the font color
+    TFTscreen.stroke(0, 0, 255);
+    // print the sensor value
+    TFTscreen.text(TimeGraphPrintout, 88, 48);
+    TFTscreen.text(TotalTimeGraphPrintout, 76, 56);
+    MemTimeGraph = TimeGraph;
+    strcpy (MemTimeGraphPrintout, TimeGraphPrintout);
+    strcpy (MemTotalTimeGraphPrintout, TotalTimeGraphPrintout);
+  }
 
   /*
    * Devo stare attento perche` questa routine dev'essere eseguita
@@ -292,8 +357,10 @@ void loop() {
    * preferisco sia "fisso", come i termostati in casa ..
    */
   // Questa riga aggiorna ogni minuto
-  //if (tm.Minute != MemMinute) {
-  if (tm.Minute != MemMinute && (tm.Minute == 0 || tm.Minute == 30)) {
+  //if (tm.Minute != MemMinutes) {
+  // Questa riga era com'era prima del potenziometro
+  //if (tm.Minute != MemMinutes && (tm.Minute == 0 || tm.Minute == 30)) {
+  if (tm.Minute != MemMinutes && (tm.Minute % TimeGraph == 0)) {
     // Stampa array su LCD
     /*
     * Stampa i 128 (come i pixel) valori di temperatura e umidita`,
@@ -316,7 +383,7 @@ void loop() {
     ArrayHumidity[CycleArray] = Humidity;
     ArrayTemperature[CycleArray] = Temperature;
     // Memorizzo il tempo attuale
-    MemMinute = tm.Minute;
+    MemMinutes = tm.Minute;
     // Scrivo ..
     for (CycleArray = 127; CycleArray >= 0; CycleArray--) {
       TFTscreen.stroke(0, 255, 0);
