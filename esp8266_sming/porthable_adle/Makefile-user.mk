@@ -29,6 +29,9 @@ COM_PORT = /dev/ttyAMA0
 # Com port speed
 COM_SPEED	= 115200
 
+# Com port speed serial (python)
+COM_SPEED_SERIAL	= 9600
+
 # SPIFFs Location
 SPIFF_FILES = web/build
 
