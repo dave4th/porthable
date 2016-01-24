@@ -66,8 +66,8 @@ Ho modificato la visualizzazione sul display,
  aggiungendo i tempi grafico e qualche tacca di riferimento,
  forse ho esagerato ..
 
-Il programma testato e` solamente quello della versione ADLE,
- nell'altro mi sono limitato a copiare le parti, quindi e` da provare.
+Il programma testato e\` solamente quello della versione ADLE,
+ nell'altro mi sono limitato a copiare le parti, quindi e\` da provare.
 
 Modificato circuito elettrico.
 
