@@ -54,7 +54,7 @@ Programmazione ATMEGA328P:
 
 Il programma contiene ancora tutti i riferimenti alla configurazione completa, ma sono stati commentati i blocchi inutilizzati.
 
-Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
+Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (vedi programma/sketch).
 
 # porthable ADLE
 
@@ -66,7 +66,7 @@ Seconda versione, composta da:
 
 Il programma e` stato ampiamente rivisto, ma contiene ancora qualche riferimento alla configurazione completa, sono stati commentati i blocchi inutilizzati.
 
-Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (previa sistemazione del programma, ovviamente).
+Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (vedi programma/sketch).
 
 # Aggiornamenti 2016 01 24
 
@@ -84,3 +84,7 @@ Il programma testato e\` solamente quello della versione ADLE,
 Modificato circuito elettrico.
 
 Elimino i ".hex" dal repository github (sapete come ricavarli dai sorgenti ;) )
+
+# Aggiornamenti 2016 01 31
+
+Rimesso ".hex" per comodita\`.
