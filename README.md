@@ -25,15 +25,15 @@ Nei 'moduli' con orologio, per prima cosa si deve configurare l'ora, dopo aver c
 
 Anzitutto ho creato il ".hex" semplicemente facendo un verifica dall'Arduino IDE 1.6.7, il file viene generato in una sottodirectory "/tmp".
 
-Poi l'ho caricato col comando:
+Prima di caricare il programma, scollegate/togliete il Display (perche\` ha dei collegamenti in comune sulla SPI) e il modulo ESP8266 (perche\` e\` collegato sulla seriale), se li avete collegati.
+
+Caricare lo sketch col comando (non serve avere un'ATMEGA col bootloader precaricato):
 <pre>sudo avrdude -p m328p -P /dev/spidev0.0 -c linuxspi -b 10000 -U flash:w:git/porthable/arduino/porthable_DS1302_SetSerial.ino.hex</pre>
 
-Con le "python-serial" ho configurato l'ora:
+Con le "python-serial" (http://pyserial.readthedocs.org/en/latest/tools.html#module-serial.tools.miniterm) ho configurato l'ora:
 <pre>miniterm.py --cr /dev/ttyAMA0 115200</pre>
 
-Le istruzioni su come procedere all'impostazione dell'ora sono indicate nel ".ino" (che contiene il codice sorgente).
-
-Comunque basta inserire la stringa "aaaa,mm,gg,HH,MM,SS" (Anno,Mese,Giorno,Hora,Minuti,Secondi).
+Le istruzioni su come procedere all'impostazione dell'ora sono indicate nel ".ino" (che contiene il codice sorgente), comunque basta inserire la stringa "aaaa,mm,gg,HH,MM,SS" (Anno,Mese,Giorno,Hora,Minuti,Secondi).
 
 Questa operazione dovra\` essere ripetuta quando si scarichera` la batteria tampone.
 
