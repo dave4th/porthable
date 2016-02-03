@@ -16,6 +16,9 @@ Poi .. vedremo in cosa e se .. si evolvera`.
 * Modulo wifi ESP8266
 * Modulo orologio DS1302
 
+# Kicad
+
+Il circuito e` aggiornato (se non ho dimenticato di fare upload ;) ), normalmente anche il ".pdf", per il resto, estrazione materiali, pcb .. eccetera, sono solo delle prove.
 
 # w/ DS1302
 
@@ -68,7 +71,9 @@ Il programma e` stato ampiamente rivisto, ma contiene ancora qualche riferimento
 
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (vedi programma/sketch).
 
-# Aggiornamenti 2016 01 24
+# Update
+
+## Aggiornamenti 2016 01 24
 
 Ho eliminato la seriale software, troppi problemi, collegando l'ESP sulla seriale standard dell'ATMEGA.
 
@@ -85,6 +90,16 @@ Modificato circuito elettrico.
 
 Elimino i ".hex" dal repository github (sapete come ricavarli dai sorgenti ;) )
 
-# Aggiornamenti 2016 01 31
+## Aggiornamenti 2016 01 31
 
 Rimesso ".hex" per comodita\`.
+
+## Aggiornamenti 2016 02 03
+
+Cambiato libreria sensore DHT11 (http://playground.arduino.cc/Main/DHT11Lib).
+
+Modificato aggiornamento data-ora.
+
+Aggiunte memorie di lettura per eliminare le troppe oscillazioni sui valori.
+
+Per ora solo versione ADLE.

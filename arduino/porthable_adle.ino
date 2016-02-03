@@ -19,7 +19,7 @@
 
 #include <TFT.h>  // Arduino LCD library
 //#include <SPI.h>
-#include <dht.h>
+#include <dht11.h>  // Cambio libreria
 //#include <DS1302RTC.h>
 //#include <Time.h>
 //#include <SoftwareSerial.h> // ESP8266
@@ -36,11 +36,15 @@
 TFT TFTscreen = TFT(cs, dc, rst);
 
 // DHT11, Sensore di temperatura e umidita`
-dht DHT;
+dht11 DHT;
 #define DHT11_PIN 4
 
-int Humidity;
-int Temperature;
+int ReadHumidity = 0;
+int ReadTemperature = 0;
+int Humidity = 0;
+int Temperature = 0;
+int MemReadHumidity = 0;
+int MemReadTemperature = 0;
 int MemHumidity = 0;
 int MemTemperature = 0;
 
@@ -74,6 +78,7 @@ int Minutes = 1;
 int Seconds = 1;
 int MemSeconds = 0;
 int MemMinutes = 1;
+int MemHours = 0; // Aggiunta per aggiornamento dell'orario (che non funziona bene ?)
 int MemDay = 0;
 
 // int array per creazione grafico
@@ -252,13 +257,12 @@ void loop() {
    * Sposto la lettura dei valori sull'OK.
    */
   //Serial.print("DHT11, \t");
-  int chk = DHT.read11(DHT11_PIN);
-  switch (chk)
-  {
+  int chk = DHT.read(DHT11_PIN);
+  switch (chk) {
     case DHTLIB_OK:
       //Serial.print("OK,\t");
-      Temperature = DHT.temperature;
-      Humidity = DHT.humidity;
+      ReadTemperature = DHT.temperature;
+      ReadHumidity = DHT.humidity;
       break;
     case DHTLIB_ERROR_CHECKSUM:
       //Serial.println("DHT11: Checksum error,\t");
@@ -270,6 +274,36 @@ void loop() {
       //Serial.println("DHT11: Unknown error,\t");
       break;
   }
+
+  /*
+   * Visto che il valore letto e` incostante, aggiungo un ciclo di conferma 
+   * prima di memorizzare:
+   * 
+   * Se temperatura letta divera, 
+   * e se la memoria e` diversa da quella in lettura ..
+   * memorizzo,
+   * se e` uguale,
+   * metto la memoria in "valore ok"
+   */
+  if (ReadHumidity != Humidity) {
+    if (MemReadHumidity != ReadHumidity) {
+      MemReadHumidity = ReadHumidity;
+    }
+    else {
+      Humidity = MemReadHumidity;
+    }
+  }
+  
+  if (ReadTemperature != Temperature) {
+    if (MemReadTemperature != ReadTemperature) {
+      MemReadTemperature = ReadTemperature;
+    }
+    else {
+      Temperature = MemReadTemperature;
+    }
+  }
+  /* Fine controllo e memorizzazione nuovi valori */
+
   // DISPLAY DATA
   //Serial.print(Humidity, 1);
   //Serial.print(",\t");
@@ -296,12 +330,14 @@ void loop() {
       Hours = Serial.parseInt();
       Minutes = Serial.parseInt();
       Seconds = Serial.parseInt();
-      // Non mi voglio complicare la vita, la faccio semplice, una volta al giorno
-      if (Day != MemDay) {
-        setTime(Hours,Minutes,Seconds,Day,Month,Year); // alternative to above, yr is 2 or 4 digit yr (2010 or 10 sets year to 2010)
-      }
       //Serial.println(now());
     }
+    // Ogni ora aggiorno ..
+  }
+  
+  if (Hours != MemHours) {
+    setTime(Hours,Minutes,Seconds,Day,Month,Year); // alternative to above, yr is 2 or 4 digit yr (2010 or 10 sets year to 2010)
+    MemHours = Hours;
   }
 
   /*
@@ -318,7 +354,7 @@ void loop() {
   DataValDay.toCharArray(DataPrintout, 11);
   DataValTime.toCharArray(TimePrintout, 9);
   
-  // ste the font size for date/time
+  // set the font size for date/time
   TFTscreen.setTextSize(1);
 
   // Date/time
@@ -367,7 +403,7 @@ void loop() {
     strcpy (MemTimePrintout, TimePrintout);
   }
 
-  // ste the font size for humidity/temperature
+  // set the font size for humidity/temperature
   TFTscreen.setTextSize(2);
 
   // Humidity
@@ -397,7 +433,7 @@ void loop() {
     strcpy (MemSensorTPrintout, SensorTPrintout);
   }
 
-  // ste the font size for potentiometer
+  // set the font size for potentiometer
   TFTscreen.setTextSize(1);
 
   /*

@@ -38,8 +38,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "PorTHable (DHT11: Temperatura, Umidita`)"
-Date "23 jan 2016"
-Rev "0.0.5"
+Date "31 jan 2016"
+Rev "0.1.0"
 Comp "mail4davide@gmail.com"
 Comment1 "+ ESP8266, DS1302, Seriali e Programmazione"
 Comment2 "ATmega328 w/ DHT11, TFT LCD"
@@ -169,24 +169,6 @@ F 3 "" H 1600 7300 60  0000 C CNN
 $EndComp
 Connection ~ 1600 6000
 $Comp
-L C C1
-U 1 1 56670337
-P 1800 6700
-F 0 "C1" H 1800 6800 40  0000 L CNN
-F 1 "4,7uF" H 1806 6615 40  0000 L CNN
-F 2 "~" H 1838 6550 30  0000 C CNN
-F 3 "~" H 1800 6700 60  0000 C CNN
-	1    1800 6700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1800 6100 1800 6500
-Wire Wire Line
-	1800 6900 1800 7100
-Wire Wire Line
-	1800 7100 1600 7100
-Connection ~ 1600 7100
-$Comp
 L R R1
 U 1 1 56672AC8
 P 3800 2650
@@ -262,35 +244,6 @@ F 3 "~" H 4000 2650 30  0000 C CNN
 	1    4000 2650
 	1    0    0    -1  
 $EndComp
-$Comp
-L SW_PUSH SW2
-U 1 1 566D2F91
-P 3600 2700
-F 0 "SW2" H 3750 2810 50  0000 C CNN
-F 1 "RESET" H 3600 2620 50  0000 C CNN
-F 2 "~" H 3600 2700 60  0000 C CNN
-F 3 "~" H 3600 2700 60  0000 C CNN
-	1    3600 2700
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	3600 2200 3600 2400
-Connection ~ 3600 2200
-Wire Wire Line
-	3600 3000 3600 3200
-Wire Wire Line
-	3600 3200 3800 3200
-Connection ~ 3800 3200
-Wire Notes Line
-	2800 3400 3900 3400
-Wire Notes Line
-	3900 3400 3900 1900
-Wire Notes Line
-	3900 1900 2800 1900
-Wire Notes Line
-	2800 1900 2800 3400
-Text Notes 2950 3350 1    60   ~ 0
-Nella versione finale\nnon servira`, ci sara`\ninterruttore generale\non/off. Il reset sara`\ncollegato alla +VCC\ndirettamente.
 Wire Wire Line
 	3700 5400 9500 5400
 Wire Wire Line
@@ -332,8 +285,6 @@ F 3 "~" H 1300 6700 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	1300 6100 1800 6100
-Wire Wire Line
 	1400 7200 1400 7300
 $Comp
 L +3,3V #PWR1
@@ -350,7 +301,6 @@ Wire Wire Line
 	1200 7300 1200 7200
 Wire Wire Line
 	1300 2000 1300 6200
-Connection ~ 1300 6100
 Connection ~ 1300 4000
 Connection ~ 1300 3700
 Text Notes 1400 7600 0    59   ~ 0
@@ -481,7 +431,7 @@ F 3 "" H 9850 4600 60  0000 C CNN
 	1    9850 4600
 	1    0    0    -1  
 $EndComp
-Text Notes 9800 5400 0    100  ~ 0
+Text Notes 9900 5450 1    39   ~ 0
 SERIAL
 Text Notes 9900 4300 1    39   ~ 0
 Program w/ RPi
@@ -568,4 +518,42 @@ Wire Wire Line
 	3700 4550 5800 4550
 Wire Wire Line
 	5800 4550 5800 4500
+Text Notes 9050 4600 0    39   ~ 0
+Analog Input 1
+Text Notes 9050 4800 0    39   ~ 0
+Analog Input 2
+Text Notes 9050 4900 0    39   ~ 0
+Analog Input 3
+Text Notes 9050 5000 0    39   ~ 0
+Analog Input 4
+Text Notes 9100 5100 0    39   ~ 0
+Digital Pin 2
+Text Notes 9100 5200 0    39   ~ 0
+Digital Pin 3
+Text Notes 8950 5400 0    39   ~ 0
+Digital Pin 1 (TX)
+Text Notes 8950 5300 0    39   ~ 0
+Digital Pin 0 (RX)
+Text Notes 9450 3900 2    39   ~ 0
+RESET
+Text Notes 9050 4000 0    39   ~ 0
+Digital Pin 11
+Text Notes 9050 4100 0    39   ~ 0
+Digital Pin 12
+Text Notes 9050 4200 0    39   ~ 0
+Digital Pin 13
+Text Notes 10050 5300 0    39   ~ 0
+8 (GPIO14/TXD0)
+Text Notes 10050 5400 0    39   ~ 0
+10 (GPIO15/RXD0)
+Text Notes 9450 3800 2    39   ~ 0
++3,3V
+Text Notes 9450 4300 2    39   ~ 0
+GND
+Text Notes 9450 4400 2    39   ~ 0
++3,3V
+Text Notes 9450 4700 2    39   ~ 0
+GND
+Text Notes 9100 4500 0    39   ~ 0
+Digital Pin 4
 $EndSCHEMATC
