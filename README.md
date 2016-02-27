@@ -24,6 +24,12 @@ Il circuito e` aggiornato (se non ho dimenticato di fare upload ;) ), normalment
 
 Nei 'moduli' con orologio, per prima cosa si deve configurare l'ora, dopo aver collegato all'ATMEGA il DS1302 come da circuito elettrico, caricare sul microcontrollore il programma: "porthable_DS1302_SetSerial".
 
+### Problema DS1302
+
+Se si sostituisce l'atmega (per esempio quando se ne mette uno programmato differente) togliendo completamente alimentazione, lsciando comunque la batteria tampone, il DS1302 sembra vada in blocco e si deve riprogrammare.
+
+Sembra sia sufficiente mantenere alimentazione (o meglio, mantenere il riferimento a 0V) aprendo solo l'interruttore di accensione, quando si sostituisce l'atmega.
+
 ## Programmazione con Raspberry Pi
 
 Anzitutto ho creato il ".hex" semplicemente facendo un verifica dall'Arduino IDE 1.6.7, il file viene generato in una sottodirectory "/tmp".
@@ -67,9 +73,24 @@ Seconda versione, composta da:
 * LCD TFT 1,44"
 * ESP8266
 
-Il programma e` stato ampiamente rivisto, ma contiene ancora qualche riferimento alla configurazione completa, sono stati commentati i blocchi inutilizzati.
+Il programma e\` stato ampiamente rivisto, ma contiene ancora qualche riferimento alla configurazione completa, sono stati commentati i blocchi inutilizzati.
 
 Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (vedi programma/sketch).
+
+# porthable AWLD
+
+Versione con sonda 'OneWire', composta da:
+* ATMEGA328P
+* DS18B20
+* LCD TFT 1,44"
+* DS1302
+
+Solito, il programma e\` stato modificato mantenendo alcuni riferimenti alla configurazione da cui e\` stato originato (ADLE), sono stati commentati i blocchi inutilizzati.
+
+Il collegamento della sonda 'OneWire' DS18B20 e\` identico al DHT11 (non ho ancora fatto o modificato uno schema elettrico)
+
+Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (vedi programma/sketch).
+
 
 # Update
 
@@ -103,3 +124,9 @@ Modificato aggiornamento data-ora.
 Aggiunte memorie di lettura per eliminare le troppe oscillazioni sui valori.
 
 Per ora solo versione ADLE.
+
+
+# Riferimenti
+
+* http://www.rinkydinkelectronics.com/library.php?id=5
+* https://github.com/PaulStoffregen/OneWire
