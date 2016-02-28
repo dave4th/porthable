@@ -11,9 +11,9 @@ Poi .. vedremo in cosa e se .. si evolvera`.
 
 ## Composizione/i
 * ATMEGA328P (Arduino)
-* Sonda di temperatura e umidita` DHT11
-    oppure
-    Sonda di temperatura DS18B20
+* Sonda temperatura:
+    * Sonda di temperatura e umidita` DHT11
+    * Sonda di temperatura DS18B20
 * TFT LCD 1,44"
 * Modulo wifi ESP8266
 * Modulo orologio DS1302
