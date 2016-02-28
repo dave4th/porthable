@@ -9,9 +9,11 @@ Un piccolo esperimento per realizzare un sensore di temperatura che sia movibile
 
 Poi .. vedremo in cosa e se .. si evolvera`.
 
-## Composizione
+## Composizione/i
 * ATMEGA328P (Arduino)
 * Sonda di temperatura e umidita` DHT11
+    oppure
+    Sonda di temperatura DS18B20
 * TFT LCD 1,44"
 * Modulo wifi ESP8266
 * Modulo orologio DS1302
@@ -86,6 +88,20 @@ Versione con sonda 'OneWire', composta da:
 * DS1302
 
 Solito, il programma e\` stato modificato mantenendo alcuni riferimenti alla configurazione da cui e\` stato originato (ADLE), sono stati commentati i blocchi inutilizzati.
+
+Il collegamento della sonda 'OneWire' DS18B20 e\` identico al DHT11 (non ho ancora fatto o modificato uno schema elettrico)
+
+Lo schema elettrico comprende ancora tutta la circuiteria, e\` sufficiente non collegare quello che non c'e\` o che non si utilizza (vedi programma/sketch).
+
+# porthable AWLE
+
+Versione con sonda 'OneWire', composta da:
+* ATMEGA328P
+* DS18B20
+* LCD TFT 1,44"
+* ESP8266
+
+Solito, il programma e\` stato modificato mantenendo alcuni riferimenti alla configurazione da cui e\` stato originato (AWLE, AWLD), sono stati commentati i blocchi inutilizzati.
 
 Il collegamento della sonda 'OneWire' DS18B20 e\` identico al DHT11 (non ho ancora fatto o modificato uno schema elettrico)
 
