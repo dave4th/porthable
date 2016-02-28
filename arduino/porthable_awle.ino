@@ -37,13 +37,13 @@ TFT TFTscreen = TFT(cs, dc, rst);
 OneWire  ds(4);  // on pin 4 (a 4.7K resistor is necessary)
 
 //int ReadHumidity = 0;
-int ReadTemperature = 0;
+float ReadTemperature = 0;
 //int Humidity = 0;
-int Temperature = 0;
+float Temperature = 0;
 //int MemReadHumidity = 0;
-int MemReadTemperature = 0;
+float MemReadTemperature = 0;
 //int MemHumidity = 0;
-int MemTemperature = 0;
+float MemTemperature = 0;
 
 // Init the DS1302
 // Set pins:  CE, IO,CLK
@@ -56,7 +56,7 @@ int MemTemperature = 0;
  * Variabili accessorie per stampe sul display e memorizzazioni
  */
 // char array to print to the screen, only Humidity & Temperature ?
-char SensorTPrintout[3];
+char SensorTPrintout[6];
 //char SensorHPrintout[3];
 char DataPrintout[11];
 char TimePrintout[9];
@@ -114,9 +114,7 @@ void writeTextStatic() {
   // write the text
   TFTscreen.text("Data       Ora", 0, 0);
   // write the text
-  //TFTscreen.text("Umidita`", 0, 16);
-  // write the text
-  TFTscreen.text("Temperatura", 0, 32);
+  TFTscreen.text("Temperatura", 0, 24);
   // write the text
   TFTscreen.text("Campionamento", 0, 48);
   // write the text
@@ -130,12 +128,12 @@ void writeTextStatic() {
    * .. write ..
    */
   TFTscreen.stroke(64, 64, 64);  // gray 75%
-  TFTscreen.text("50 -  -  -  -  -  -  -", 0, 74);
-  TFTscreen.text("40 -  -  -  -  -  -  -", 0, 84);
-  TFTscreen.text("30 -  -  -  -  -  -  -", 0, 94);
-  TFTscreen.text("20 -  -  -  -  -  -  -", 0, 104);
-  TFTscreen.text("10 -  -  -  -  -  -  -", 0, 114);
-  TFTscreen.text("0", 0, 120);
+  //TFTscreen.text("50 -  -  -  -  -  -  -", 0, 69);
+  TFTscreen.text("40 -  -  -  -  -  -  -", 0, 79);
+  TFTscreen.text("30 -  -  -  -  -  -  -", 0, 89);
+  TFTscreen.text("20 -  -  -  -  -  -  -", 0, 99);
+  TFTscreen.text("10 -  -  -  -  -  -  -", 0, 109);
+  TFTscreen.text("0", 0, 119);
   
   // set the font color to white
   TFTscreen.stroke(128, 128, 128);
@@ -144,7 +142,7 @@ void writeTextStatic() {
   // write the text
   //TFTscreen.text("%\n ", 103, 16);
   // write the text
-  TFTscreen.text("C\n ", 103, 32);
+  //TFTscreen.text("C\n ", 103, 32);  // Non lo metto, per ragioni "estetiche"
   
 }
 
@@ -347,7 +345,7 @@ void loop() {
   //Serial.println(" Fahrenheit");
 /* END */
 
-ReadTemperature = int(celsius);
+ReadTemperature = celsius;
 
   /*
    * Visto che il valore letto e` incostante, aggiungo un ciclo di conferma 
@@ -391,7 +389,7 @@ ReadTemperature = int(celsius);
   
   // convert the reading to a char array
   //sensorValH.toCharArray(SensorHPrintout, 3);
-  sensorValT.toCharArray(SensorTPrintout, 3);
+  sensorValT.toCharArray(SensorTPrintout, 6);
 
   // Gestione DATA/ORA proveniente da ESP8266 via seriale
   while (Serial.available() > 0) {
@@ -500,13 +498,12 @@ ReadTemperature = int(celsius);
   if (Temperature != MemTemperature) {
     // erase the text you just wrote
     TFTscreen.stroke(0, 0, 0);
-    TFTscreen.text(MemSensorTPrintout, 76, 32);
+    TFTscreen.text(MemSensorTPrintout, 66, 32);
     // set the font color
     TFTscreen.stroke(255, 0, 0);
     // print the sensor value
-    TFTscreen.text(SensorTPrintout, 76, 32);
-    //Serial.println(SensorTPrintout); // ESP8266
-    Serial.println(celsius); // Stavolta metto il dato float
+    TFTscreen.text(SensorTPrintout, 66, 32);  // era 76, lo metto in colonna con l'ora
+    Serial.println(SensorTPrintout); // ESP8266
     MemTemperature = Temperature;
     strcpy (MemSensorTPrintout, SensorTPrintout);
   }
@@ -559,12 +556,18 @@ ReadTemperature = int(celsius);
     * creando un grafico.
     * Al solito, devo prima eliminare la scritta precedente 
     * e poi mettere la nuova.
+    * 
+    * Scrivo da sinistra a destra, quindi devo partire dal piu` "alto" e scendere (sottrarre)
+    * L'aggiornamento dell'array invece, posso farlo normalmente.
+    * Introduzione i valori negativi nella scala, predispongo per un -5 massimo,
+    * quindi devo sottrarre 5 ai valori "punto" da stampare, perche devo 'alzare' il punto,
+    * perche` shiftero` in alto il grafico.
     */
     // Prima cancello le scritte
     TFTscreen.stroke(0, 0, 0);
     for (CycleArray = 127; CycleArray >= 0; CycleArray--) {
       //TFTscreen.point(CycleArray, 127 - ArrayHumidity[CycleArray]);
-      TFTscreen.point(CycleArray, 127 - ArrayTemperature[CycleArray]);
+      TFTscreen.point(CycleArray, 127 - ArrayTemperature[CycleArray] - 5 ); // Potevo cambiare 127, ma per chiarezza ...
     }
     // Poi shifto e aggiorno con l'ultimo valore
     for (CycleArray = 0; CycleArray <= 126; CycleArray++) {
@@ -573,7 +576,7 @@ ReadTemperature = int(celsius);
     }
     // Quando finisce e` al 127 e posso scrivere il dato nuovo
     //ArrayHumidity[CycleArray] = Humidity;
-    ArrayTemperature[CycleArray] = Temperature;
+    ArrayTemperature[CycleArray] = int(Temperature);  // Intero perche` tanto il grafico non gestisce i numeri con la virgola
     // Memorizzo il tempo attuale
     MemMinutes = minute();
     // Scrivo ..
@@ -581,7 +584,7 @@ ReadTemperature = int(celsius);
       //TFTscreen.stroke(0, 255, 0);
       //TFTscreen.point(CycleArray, 127 - ArrayHumidity[CycleArray]);
       TFTscreen.stroke(255, 0, 0);
-      TFTscreen.point(CycleArray, 127 - ArrayTemperature[CycleArray]);
+      TFTscreen.point(CycleArray, 127 - ArrayTemperature[CycleArray] - 5 ); // Anche qua, ovviamente il "- 5"
     }
   }
 
