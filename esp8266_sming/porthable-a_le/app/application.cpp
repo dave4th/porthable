@@ -9,7 +9,7 @@
 
 /* User settings */
 #define MQTT_SERVER  "hc.home.local"		// Indirizzo del server MQTT
-#define MQTT_PUBLISH "porthable/adle/message"	// Percorso di pubblicazione dei dati MQTT
+#define MQTT_PUBLISH "porthable/message"	// Percorso di pubblicazione dei dati MQTT
 #define NTP_SERVER   "0.it.pool.ntp.org"	// Indirizzo del sever NTP
 #define FTP_USERNAME "me"			// Username FTP
 #define FTP_PASSWORD "123"			// Password FTP
@@ -100,7 +100,7 @@ void onDataCallback(Stream& stream, char arrivedChar, unsigned short availableCh
     //Serial.println("-----------------------------------------------");
 
     //Serial.println("Let's publish message now!");
-    mqtt.publish(MQTT_PUBLISH, String(SystemClock.getSystemTimeString(eTZ_UTC)+" "+Message)); // or publishWithQoS
+    mqtt.publish(MQTT_PUBLISH, String(SystemClock.getSystemTimeString(eTZ_UTC)+","+Message)); // or publishWithQoS
     //Serial.println(Temperatura);	// Usata per verifica temperatura
     Temperatura = Message;	// Copia stringa per stampa
     //Serial.println(Temperatura);	// Usata per verifica temperatura
