@@ -7,9 +7,22 @@
 	//#define WIFI_PWD "PleaseEnterPass"
 #endif
 
-/* User settings */
-#define MQTT_SERVER  "hc.home.local"		// Indirizzo del server MQTT
-#define MQTT_PUBLISH "porthable/message"	// Percorso di pubblicazione dei dati MQTT
+// ... and/or MQTT username and password
+#ifndef MQTT_USERNAME
+	#define MQTT_USERNAME ""
+	#define MQTT_PWD ""
+#endif
+
+// ... and/or MQTT host and port
+#ifndef MQTT_HOST
+	#define MQTT_HOST "level1"
+	#define MQTT_PORT 1883
+#endif
+
+/* (My) User settings */
+#define MQTT_PUBLISH "I/Mobile/Mobile/porthable/Temperatura"	// Percorso di pubblicazione dei dati MQTT
+#define MQTT_SUBSCRIBE "O/Mobile/Mobile/porthable/#"	// Percorso di lettura dei dati MQTT
+#define ID "TEMPmobile"	// Identificatore
 #define NTP_SERVER   "0.it.pool.ntp.org"	// Indirizzo del sever NTP
 #define FTP_USERNAME "me"			// Username FTP
 #define FTP_PASSWORD "123"			// Password FTP
@@ -26,7 +39,7 @@ void onDataCallback(Stream& stream, char arrivedChar, unsigned short availableCh
 
 // MQTT client
 // For quickly check you can use: http://www.hivemq.com/demos/websocket-client/ (Connection= test.mosquitto.org:8080)
-MqttClient mqtt(MQTT_SERVER, 1883, onMessageReceived);
+MqttClient mqtt(MQTT_HOST, 1883, onMessageReceived);
 
 // Questa serve all'elenco delle reti WiFi
 BssList networks;
@@ -100,7 +113,8 @@ void onDataCallback(Stream& stream, char arrivedChar, unsigned short availableCh
     //Serial.println("-----------------------------------------------");
 
     //Serial.println("Let's publish message now!");
-    mqtt.publish(MQTT_PUBLISH, String(SystemClock.getSystemTimeString(eTZ_UTC)+","+Message)); // or publishWithQoS
+    //mqtt.publish(MQTT_PUBLISH, String(SystemClock.getSystemTimeString(eTZ_UTC)+","+Message)); // or publishWithQoS	// Prima di "level 1"
+	mqtt.publish(MQTT_PUBLISH, "{ \"ID\" : \"" + String(ID) + "\", \"Valore\" : \"" + String(Message) + "\" }"); // or publishWithQoS
     //Serial.println(Temperatura);	// Usata per verifica temperatura
     Temperatura = Message;	// Copia stringa per stampa
     //Serial.println(Temperatura);	// Usata per verifica temperatura

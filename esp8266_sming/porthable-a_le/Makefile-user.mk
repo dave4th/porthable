@@ -26,10 +26,10 @@ SMING_HOME = $(HOME)/git/Sming/Sming
 # MacOS / Linux:
 COM_PORT = /dev/ttyAMA0
 
-# Com port speed
+# Com port speed (Program transfer)
 COM_SPEED	= 115200
 
-# Com port speed serial (python)
+# Com port speed serial (& python r/w)
 COM_SPEED_SERIAL	= 9600
 
 # SPIFFs Location
